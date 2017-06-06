@@ -3,23 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp">
+
+    >
 
     <ImageView
         android:id="@+id/myImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minHeight="270dp"
-        android:minWidth="280dp"
+        android:minHeight="290dp"
+        android:minWidth="300dp"
          />
 
-    <TextView
-        android:id="@+id/myMovieTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textStyle="italic"
 
-        />
 
 </LinearLayout>

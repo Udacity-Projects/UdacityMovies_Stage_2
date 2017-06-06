@@ -39,11 +39,12 @@ public class MainActivity extends AppCompatActivity {
     static String SortBy = "POPULAR";
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toast.makeText(this, SortBy, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, SortBy, Toast.LENGTH_SHORT).show();
         Movies = new ArrayList<>();
         myProgress = (ProgressBar)findViewById(R.id.progressDialog);
         myProgress.setVisibility(View.VISIBLE);
@@ -65,13 +66,14 @@ public class MainActivity extends AppCompatActivity {
 
                 MovieObject temo = Movies.get(position);
 
-                Intent in = new Intent(MainActivity.this, DisplayMovieDetails.class);
+                Intent in = new Intent(MainActivity.this, MovieDetails.class);
                 in.putExtra("POSTER_URL", temo.getMovieURL());
                 in.putExtra("ORIGINAL_TITLE", temo.getMovieOriginalTitle());
                 in.putExtra("SYNOPSIS", temo.getMovieSynopsis());
                 in.putExtra("RATING", temo.getMovieRating());
                 in.putExtra("RELEASE_DATE", temo.getMovieReleaseDate());
                 in.putExtra("ORIGINAL_TITLE", temo.getMovieOriginalTitle());
+                in.putExtra("ID", temo.getMovieID());
                 startActivity(in);
 
 
@@ -92,10 +94,12 @@ public class MainActivity extends AppCompatActivity {
         DownloadTask newTask = new DownloadTask();
         Movies.clear();
         if(s == "POPULAR"){
+            DownloadTask.condition = "REGULAR";
             newTask.execute("https://api.themoviedb.org/3/movie/popular?api_key=984eb4f6c311eabbe5fd13dc82c16ab7&language=en-US&page=1");
             myGridView.setAdapter(myAdapter);
         }
         if(s == "RATINGS"){
+            DownloadTask.condition = "REGULAR";
             newTask.execute("https://api.themoviedb.org/3/movie/top_rated?api_key=984eb4f6c311eabbe5fd13dc82c16ab7&language=en-US&page=1");
             myGridView.setAdapter(myAdapter);
         }

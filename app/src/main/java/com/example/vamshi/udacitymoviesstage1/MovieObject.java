@@ -12,16 +12,17 @@ public class MovieObject {
     private String movieRating;
     private String movieReleaseDate;
     private String movieOriginalTitle;
+    private String movieID;
 
-    public MovieObject(String movieTitle, String movieURL, String movieSynopsis, String movieRating, String movieReleaseDate, String movieOriginalTitle) {
+    public MovieObject(String movieTitle, String movieURL, String movieSynopsis, String movieRating, String movieReleaseDate, String movieOriginalTitle, String movieID) {
         this.movieTitle = movieTitle;
         this.movieURL = movieURL;
         this.movieSynopsis = movieSynopsis;
         this.movieRating = movieRating;
         this.movieReleaseDate = movieReleaseDate;
         this.movieOriginalTitle = movieOriginalTitle;
+        this.movieID = movieID;
     }
-
 
     public String getMovieTitle() {
         return movieTitle;
@@ -69,5 +70,13 @@ public class MovieObject {
 
     public void setMovieOriginalTitle(String movieOriginalTitle) {
         this.movieOriginalTitle = movieOriginalTitle;
+    }
+
+    public String getMovieID() {
+        return movieID;
+    }
+
+    public void setMovieID(String movieID) {
+        this.movieID = movieID;
     }
 }

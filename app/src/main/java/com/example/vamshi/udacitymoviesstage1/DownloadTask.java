@@ -21,6 +21,7 @@ import static com.example.vamshi.udacitymoviesstage1.MainActivity.Movies;
 public class DownloadTask extends AsyncTask<String,Void,String> {
 
     String result;
+    static String condition = "REGULAR";
 
 
     @Override
@@ -59,21 +60,40 @@ public class DownloadTask extends AsyncTask<String,Void,String> {
 
             JSONObject root = new JSONObject(result);
             JSONArray resultArray = root.getJSONArray("results");
-            for(int i=0; i<=resultArray.length(); i++){
+            if( condition == "REGULAR") {
+                for (int i = 0; i <= resultArray.length(); i++) {
 
-                JSONObject tempObject = resultArray.getJSONObject(i);
+                    JSONObject tempObject = resultArray.getJSONObject(i);
 
-                String imageUrl = " http://image.tmdb.org/t/p/w185/" + tempObject.getString("poster_path");
-                MovieObject newMovie = new MovieObject(tempObject.getString("title"),
-                                                        imageUrl,
-                                                        tempObject.getString("overview"),
-                                                        tempObject.getString("vote_average"),
-                                                        tempObject.getString("release_date"),
-                                                        tempObject.getString("original_title"));
-                Movies.add(newMovie);
-                MainActivity.myGridView.setAdapter(MainActivity.myAdapter);
-                MainActivity.myAdapter.notifyDataSetChanged();
-                //
+                    String imageUrl = " http://image.tmdb.org/t/p/w185/" + tempObject.getString("poster_path");
+                    MovieObject newMovie = new MovieObject(tempObject.getString("title"),
+                            imageUrl,
+                            tempObject.getString("overview"),
+                            tempObject.getString("vote_average"),
+                            tempObject.getString("release_date"),
+                            tempObject.getString("original_title"),
+                            tempObject.getString("id"));
+
+                    Movies.add(newMovie);
+                    MainActivity.myGridView.setAdapter(MainActivity.myAdapter);
+                    MainActivity.myAdapter.notifyDataSetChanged();
+                    //
+
+                }
+            }
+            if( condition == "REVIEWS" ) {
+                Reviews.reviews.clear();
+
+                    for (int i = 0; i <= resultArray.length(); i++) {
+
+                        JSONObject tempObject = resultArray.getJSONObject(i);
+
+                        Reviews.reviews.add(tempObject.getString("content"));
+
+                    }
+
+                Reviews.reviews_list.setAdapter(Reviews.adapter);
+
 
             }
             //MainActivity.myGridView.setAdapter(MainActivity.myAdapter);

@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -55,10 +54,9 @@ public class GridViewAdapter extends BaseAdapter {
         }
 
         ImageView myImageView = (ImageView)gridView.findViewById(R.id.myImageView);
-        TextView myTextView = (TextView)gridView.findViewById(R.id.myMovieTitle);
         MovieObject tempObject = Movies.get(position);
         Glide.with(context).load(tempObject.getMovieURL().trim()).into(myImageView);
-        myTextView.setText(tempObject.getMovieTitle());
+
 
         return gridView;
     }
