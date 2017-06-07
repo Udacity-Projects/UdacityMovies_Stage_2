@@ -82,6 +82,10 @@ public class DownloadTask extends AsyncTask<String,Void,String> {
                 }
             }
             if( condition == "REVIEWS" ) {
+
+                Reviews.rProgress.setVisibility(View.GONE);
+                Reviews.reviews_list.setVisibility(View.VISIBLE);
+
                 Reviews.reviews.clear();
 
                     for (int i = 0; i <= resultArray.length(); i++) {
@@ -89,18 +93,11 @@ public class DownloadTask extends AsyncTask<String,Void,String> {
                         JSONObject tempObject = resultArray.getJSONObject(i);
 
                         Reviews.reviews.add(tempObject.getString("content"));
+                        Reviews.adapter.notifyDataSetChanged();
 
                     }
 
-                Reviews.reviews_list.setAdapter(Reviews.adapter);
-
-
             }
-            //MainActivity.myGridView.setAdapter(MainActivity.myAdapter);
-
-
-
-
             } catch (JSONException e1) {
 
             e1.printStackTrace();
