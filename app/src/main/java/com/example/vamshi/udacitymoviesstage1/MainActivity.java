@@ -37,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     static GridViewAdapter myAdapter;
     static ProgressBar myProgress;
     static String SortBy = "POPULAR";
+    static List<MovieObject> favMovies;
+    static GridViewAdapter favAdapter;
 
 
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 //        Toast.makeText(this, SortBy, Toast.LENGTH_SHORT).show();
         Movies = new ArrayList<>();
+        favMovies = new ArrayList<>();
         myProgress = (ProgressBar)findViewById(R.id.progressDialog);
         myProgress.setVisibility(View.VISIBLE);
         myGridView = (GridView) findViewById(R.id.myGridLayout);
@@ -59,22 +62,41 @@ public class MainActivity extends AppCompatActivity {
         }
 
         myAdapter = new GridViewAdapter(Movies,this);
+        favAdapter = new GridViewAdapter(favMovies,this);
 
         myGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                MovieObject temo = Movies.get(position);
+                if(SortBy == "FAVS"){
 
-                Intent in = new Intent(MainActivity.this, MovieDetails.class);
-                in.putExtra("POSTER_URL", temo.getMovieURL());
-                in.putExtra("ORIGINAL_TITLE", temo.getMovieOriginalTitle());
-                in.putExtra("SYNOPSIS", temo.getMovieSynopsis());
-                in.putExtra("RATING", temo.getMovieRating());
-                in.putExtra("RELEASE_DATE", temo.getMovieReleaseDate());
-                in.putExtra("ORIGINAL_TITLE", temo.getMovieOriginalTitle());
-                in.putExtra("ID", temo.getMovieID());
-                startActivity(in);
+                    MovieObject temo = favMovies.get(position);
+
+                    Intent in = new Intent(MainActivity.this, MovieDetails.class);
+                    in.putExtra("POSTER_URL", temo.getMovieURL());
+                    in.putExtra("ORIGINAL_TITLE", temo.getMovieOriginalTitle());
+                    in.putExtra("SYNOPSIS", temo.getMovieSynopsis());
+                    in.putExtra("RATING", temo.getMovieRating());
+                    in.putExtra("RELEASE_DATE", temo.getMovieReleaseDate());
+                    in.putExtra("ORIGINAL_TITLE", temo.getMovieOriginalTitle());
+                    in.putExtra("ID", temo.getMovieID());
+                    startActivity(in);
+                }
+                else{
+                    MovieObject temo = Movies.get(position);
+
+                    Intent in = new Intent(MainActivity.this, MovieDetails.class);
+                    in.putExtra("POSTER_URL", temo.getMovieURL());
+                    in.putExtra("ORIGINAL_TITLE", temo.getMovieOriginalTitle());
+                    in.putExtra("SYNOPSIS", temo.getMovieSynopsis());
+                    in.putExtra("RATING", temo.getMovieRating());
+                    in.putExtra("RELEASE_DATE", temo.getMovieReleaseDate());
+                    in.putExtra("ORIGINAL_TITLE", temo.getMovieOriginalTitle());
+                    in.putExtra("ID", temo.getMovieID());
+                    startActivity(in);
+                }
+
+
 
 
             }
@@ -102,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
             DownloadTask.condition = "REGULAR";
             newTask.execute("https://api.themoviedb.org/3/movie/top_rated?api_key=984eb4f6c311eabbe5fd13dc82c16ab7&language=en-US&page=1");
             myGridView.setAdapter(myAdapter);
+        }
+
+        if (s == "FAVS"){
+
+            myGridView.setAdapter(favAdapter);
+
         }
 
 

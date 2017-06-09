@@ -45,12 +45,13 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
     static YouTubePlayerView myPlayer;
     static String TrailerCode="";
     static ProgressBar playerProgress;
+    public Intent in;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_details);
-        Intent in  = getIntent();
+        in  = getIntent();
         ID = in.getStringExtra("ID");
         Toast.makeText(this, ID, Toast.LENGTH_SHORT).show();
         myPlayer = (YouTubePlayerView) findViewById(R.id.youtube_player);
@@ -74,7 +75,11 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
             @Override
             public void onClick(View view) {
                 fab.setImageResource(R.drawable.fav_selected);
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                MovieObject faved = new MovieObject(in.getStringExtra("ORIGINAL_TITLE"),in.getStringExtra("POSTER_URL"),
+                        in.getStringExtra("SYNOPSIS"),in.getStringExtra("RATING"),in.getStringExtra("RELEASE_DATE"),in.getStringExtra("ORIGINAL_TITLE"),
+                        in.getStringExtra("ID"));
+                MainActivity.favMovies.add(faved);
+                Snackbar.make(view, "Added to Favourites", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

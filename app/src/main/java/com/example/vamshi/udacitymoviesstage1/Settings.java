@@ -57,6 +57,8 @@ public class Settings extends AppCompatActivity {
                                 break;
                             case 2:
                                 dialog.dismiss();
+                                MainActivity.SortBy = "FAVS";
+                                MainActivity.LoadUI(MainActivity.SortBy);
                                 Toast.makeText(Settings.this, "Sorted As Favorites", Toast.LENGTH_SHORT).show();
                                 break;
                         }
