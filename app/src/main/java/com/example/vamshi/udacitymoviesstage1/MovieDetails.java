@@ -50,7 +50,7 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
     static ProgressBar playerProgress;
     public Intent in;
     Realm realm;
-    public Boolean faved = false;
+    public Boolean favedyea = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,8 +81,17 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(faved == true){
-                    Toast.makeText(MovieDetails.this, "Booo Deleted from Favs", Toast.LENGTH_SHORT).show();
+                if(favedyea == true){
+
+                    realm.executeTransaction(new Realm.Transaction() {
+                        @Override
+                        public void execute(Realm realm) {
+                            RealmResults<MovieObject> rows = realm.where(MovieObject.class).equalTo("movieID", in.getStringExtra("ID")).findAll();
+                            rows.deleteAllFromRealm();
+                            Toast.makeText(MovieDetails.this, "Deleted", Toast.LENGTH_SHORT).show();
+                            fab.setImageResource(R.drawable.fav_border);
+                        }
+                    });
 
                 }else{
                     fab.setImageResource(R.drawable.fav_selected);
@@ -98,6 +107,7 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
                     realm.commitTransaction();
                     Snackbar.make(view, "Added to Favourites", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
+                    favedyea =true;
                 }
 
             }

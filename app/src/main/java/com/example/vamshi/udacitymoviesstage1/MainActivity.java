@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     static String SortBy = "POPULAR";
     static List<MovieObject> favMovies;
     static GridViewAdapter favAdapter;
-    private DatabaseHelperAdapter myHelper;
     public static Realm realm;
 
 
@@ -39,9 +38,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //myHelper = new DatabaseHelperAdapter(this);
-        //SQLiteDatabase myDatabase = myHelper.getWritableDatabase();
-//        Toast.makeText(this, SortBy, Toast.LENGTH_SHORT).show();
         Realm.init(this);
         realm = Realm.getDefaultInstance();
         Movies = new ArrayList<>();
@@ -54,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
         // CHECKING NETWORK CONNECTION
         if(!isNetworkAvailable()){
             Toast.makeText(this, "Please Connect To The Internet!", Toast.LENGTH_SHORT).show();
+            myProgress.setVisibility(View.GONE);
+            SortBy = "FAVS";
+            LoadUI(SortBy);
         }else{
             LoadUI(SortBy);
         }
@@ -124,11 +123,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (s == "FAVS"){
-            favMovies.clear();
+
 
             RealmResults<MovieObject> favs = realm.where(MovieObject.class).findAll();
 
-            for(int i = 0; i<favs.size(); i++){
+            for(int i = 1; i<favs.size(); i++){
+
                 MovieObject newMovie = new MovieObject(favs.get(i).getMovieTitle(),favs.get(i).getMovieURL(), favs.get(i).getMovieSynopsis(),
                         favs.get(i).getMovieRating(), favs.get(i).getMovieReleaseDate(), favs.get(i).getMovieOriginalTitle(), favs.get(i).getMovieID());
                 favMovies.add(newMovie);
