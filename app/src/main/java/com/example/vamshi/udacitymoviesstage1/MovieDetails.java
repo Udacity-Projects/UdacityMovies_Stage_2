@@ -37,7 +37,7 @@ import io.realm.RealmResults;
 
 public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
-    static String GOOGLE_DEVELOPER_KEY = "AIzaSyA4Hk9f40CdF69TemQGLlThxieLJbYE6bE";
+    static String GOOGLE_DEVELOPER_KEY = "";
     private ImageView movie_poster_smallN;
     private TextView movie_titleN;
     private TextView movie_ratingN;

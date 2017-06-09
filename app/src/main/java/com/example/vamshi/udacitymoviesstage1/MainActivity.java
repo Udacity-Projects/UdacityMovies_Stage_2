@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     static List<MovieObject> favMovies;
     static GridViewAdapter favAdapter;
     public static Realm realm;
+    public static String MOVIEDBKEY = "" ;
 
 
     @Override
@@ -113,12 +114,12 @@ public class MainActivity extends AppCompatActivity {
         Movies.clear();
         if(s == "POPULAR"){
             DownloadTask.condition = "REGULAR";
-            newTask.execute("https://api.themoviedb.org/3/movie/popular?api_key=984eb4f6c311eabbe5fd13dc82c16ab7&language=en-US&page=1");
+            newTask.execute("https://api.themoviedb.org/3/movie/popular?api_key="+MOVIEDBKEY+"&language=en-US&page=1");
             myGridView.setAdapter(myAdapter);
         }
         if(s == "RATINGS"){
             DownloadTask.condition = "REGULAR";
-            newTask.execute("https://api.themoviedb.org/3/movie/top_rated?api_key=984eb4f6c311eabbe5fd13dc82c16ab7&language=en-US&page=1");
+            newTask.execute("https://api.themoviedb.org/3/movie/top_rated?api_key="+MOVIEDBKEY+"&language=en-US&page=1");
             myGridView.setAdapter(myAdapter);
         }
 
