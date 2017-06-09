@@ -1,34 +1,26 @@
 package com.example.vamshi.udacitymoviesstage1;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.provider.ContactsContract;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroupOverlay;
 import android.widget.AdapterView;
-import android.widget.GridLayout;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -39,14 +31,19 @@ public class MainActivity extends AppCompatActivity {
     static String SortBy = "POPULAR";
     static List<MovieObject> favMovies;
     static GridViewAdapter favAdapter;
-
+    private DatabaseHelperAdapter myHelper;
+    public static Realm realm;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //myHelper = new DatabaseHelperAdapter(this);
+        //SQLiteDatabase myDatabase = myHelper.getWritableDatabase();
 //        Toast.makeText(this, SortBy, Toast.LENGTH_SHORT).show();
+        Realm.init(this);
+        realm = Realm.getDefaultInstance();
         Movies = new ArrayList<>();
         favMovies = new ArrayList<>();
         myProgress = (ProgressBar)findViewById(R.id.progressDialog);
@@ -127,6 +124,15 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (s == "FAVS"){
+            favMovies.clear();
+
+            RealmResults<MovieObject> favs = realm.where(MovieObject.class).findAll();
+
+            for(int i = 0; i<favs.size(); i++){
+                MovieObject newMovie = new MovieObject(favs.get(i).getMovieTitle(),favs.get(i).getMovieURL(), favs.get(i).getMovieSynopsis(),
+                        favs.get(i).getMovieRating(), favs.get(i).getMovieReleaseDate(), favs.get(i).getMovieOriginalTitle(), favs.get(i).getMovieID());
+                favMovies.add(newMovie);
+            }
 
             myGridView.setAdapter(favAdapter);
 

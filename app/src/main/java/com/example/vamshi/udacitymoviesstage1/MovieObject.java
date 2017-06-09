@@ -1,10 +1,12 @@
 package com.example.vamshi.udacitymoviesstage1;
 
+import io.realm.RealmObject;
+
 /**
  * Created by Vamshi on 5/31/2017.
  */
 
-public class MovieObject {
+public class MovieObject extends RealmObject{
 
     private String movieTitle;
     private String movieURL;
@@ -22,6 +24,9 @@ public class MovieObject {
         this.movieReleaseDate = movieReleaseDate;
         this.movieOriginalTitle = movieOriginalTitle;
         this.movieID = movieID;
+    }
+
+    public MovieObject() {
     }
 
     public String getMovieTitle() {

@@ -32,9 +32,12 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
-    private String GOOGLE_DEVELOPER_KEY = "AIzaSyA4Hk9f40CdF69TemQGLlThxieLJbYE6bE";
+    static String GOOGLE_DEVELOPER_KEY = "AIzaSyA4Hk9f40CdF69TemQGLlThxieLJbYE6bE";
     private ImageView movie_poster_smallN;
     private TextView movie_titleN;
     private TextView movie_ratingN;
@@ -46,6 +49,8 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
     static String TrailerCode="";
     static ProgressBar playerProgress;
     public Intent in;
+    Realm realm;
+    public Boolean faved = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,8 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
         setContentView(R.layout.activity_movie_details);
         in  = getIntent();
         ID = in.getStringExtra("ID");
+        Realm.init(this);
+        realm= Realm.getDefaultInstance();
         Toast.makeText(this, ID, Toast.LENGTH_SHORT).show();
         myPlayer = (YouTubePlayerView) findViewById(R.id.youtube_player);
         movie_poster_smallN = (ImageView)findViewById(R.id.movie_poster_smallN);
@@ -62,25 +69,37 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
         movie_synopsisN = (TextView)findViewById(R.id.movie_synopsisN);
         movie_releaseN = (TextView)findViewById(R.id.movie_releaseN);
         playerProgress = (ProgressBar)findViewById(R.id.player_load);
-
+        myPlayer.initialize(GOOGLE_DEVELOPER_KEY, this);
 
         playerProgress.setVisibility(View.VISIBLE);
-        myPlayer.setVisibility(View.GONE);
+//        myPlayer.setVisibility(View.GONE);
         getTrailer newTrailer = new getTrailer();
         newTrailer.execute("https://api.themoviedb.org/3/movie/"+ ID +"/videos?api_key=984eb4f6c311eabbe5fd13dc82c16ab7&language=en-US");
-        myPlayer.initialize(GOOGLE_DEVELOPER_KEY, this);
+
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fav_button);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fab.setImageResource(R.drawable.fav_selected);
-                MovieObject faved = new MovieObject(in.getStringExtra("ORIGINAL_TITLE"),in.getStringExtra("POSTER_URL"),
-                        in.getStringExtra("SYNOPSIS"),in.getStringExtra("RATING"),in.getStringExtra("RELEASE_DATE"),in.getStringExtra("ORIGINAL_TITLE"),
-                        in.getStringExtra("ID"));
-                MainActivity.favMovies.add(faved);
-                Snackbar.make(view, "Added to Favourites", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(faved == true){
+                    Toast.makeText(MovieDetails.this, "Booo Deleted from Favs", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    fab.setImageResource(R.drawable.fav_selected);
+                    realm.beginTransaction();
+                    MovieObject faved = realm.createObject(MovieObject.class);
+                    faved.setMovieID(in.getStringExtra("ID"));
+                    faved.setMovieOriginalTitle(in.getStringExtra("ORIGINAL_TITLE"));
+                    faved.setMovieRating(in.getStringExtra("RATING"));
+                    faved.setMovieReleaseDate(in.getStringExtra("RELEASE_DATE"));
+                    faved.setMovieSynopsis(in.getStringExtra("SYNOPSIS"));
+                    faved.setMovieURL(in.getStringExtra("POSTER_URL"));
+                    MainActivity.favMovies.add(faved);
+                    realm.commitTransaction();
+                    Snackbar.make(view, "Added to Favourites", Snackbar.LENGTH_LONG)
+                            .setAction("Action", null).show();
+                }
+
             }
         });
 
@@ -115,6 +134,7 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
         // Start buffering
         if (!b) {
 
+
              youTubePlayer.cueVideo(TrailerCode);
         }
     }
@@ -128,50 +148,3 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
 }
 
 
-class getTrailer extends AsyncTask<String,Void,String>{
-
-    String result;
-    @Override
-    protected String doInBackground(String... params) {
-        result = "";
-        URL link;
-        HttpURLConnection myconnection = null;
-
-        try {
-            link = new URL(params[0]);
-            myconnection = (HttpURLConnection)link.openConnection();
-            InputStream in = myconnection.getInputStream();
-            InputStreamReader myStreamReader = new InputStreamReader(in);
-            int data = myStreamReader.read();
-            while(data!= -1){
-                char current = (char)data;
-                result+= current;
-                data = myStreamReader.read();
-            }
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-
-        try {
-
-            JSONObject root = new JSONObject(result);
-            JSONArray resultArray = root.getJSONArray("results");
-            JSONObject tempObject = resultArray.getJSONObject(0);
-
-            MovieDetails.TrailerCode = tempObject.getString("key");
-            MovieDetails.playerProgress.setVisibility(View.GONE);
-            MovieDetails.myPlayer.setVisibility(View.VISIBLE);
-
-
-        }catch (Exception E){
-
-        }
-        super.onPostExecute(s);
-    }
-}
