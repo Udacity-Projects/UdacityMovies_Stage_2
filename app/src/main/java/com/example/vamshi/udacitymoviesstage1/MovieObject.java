@@ -1,12 +1,9 @@
 package com.example.vamshi.udacitymoviesstage1;
-
-import io.realm.RealmObject;
-
 /**
  * Created by Vamshi on 5/31/2017.
  */
 
-public class MovieObject extends RealmObject{
+public class MovieObject {
 
     private String movieTitle;
     private String movieURL;

@@ -2,11 +2,10 @@ package com.example.vamshi.udacitymoviesstage1;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,9 +18,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.realm.Realm;
-import io.realm.RealmResults;
-
 public class MainActivity extends AppCompatActivity {
 
     static GridView myGridView;
@@ -31,18 +27,19 @@ public class MainActivity extends AppCompatActivity {
     static String SortBy = "POPULAR";
     static List<MovieObject> favMovies;
     static GridViewAdapter favAdapter;
-    public static Realm realm;
-    public static String MOVIEDBKEY = "" ;
+    public static DatabaseHelper db;
+    public static List<String> movieTiles;
+    public static String MOVIEDBKEY = "984eb4f6c311eabbe5fd13dc82c16ab7" ;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Realm.init(this);
-        realm = Realm.getDefaultInstance();
+        db = new DatabaseHelper(this);
         Movies = new ArrayList<>();
         favMovies = new ArrayList<>();
+        movieTiles = new ArrayList<>();
         myProgress = (ProgressBar)findViewById(R.id.progressDialog);
         myProgress.setVisibility(View.VISIBLE);
         myGridView = (GridView) findViewById(R.id.myGridLayout);
@@ -123,21 +120,6 @@ public class MainActivity extends AppCompatActivity {
             myGridView.setAdapter(myAdapter);
         }
 
-        if (s == "FAVS"){
-
-
-            RealmResults<MovieObject> favs = realm.where(MovieObject.class).findAll();
-
-            for(int i = 1; i<favs.size(); i++){
-
-                MovieObject newMovie = new MovieObject(favs.get(i).getMovieTitle(),favs.get(i).getMovieURL(), favs.get(i).getMovieSynopsis(),
-                        favs.get(i).getMovieRating(), favs.get(i).getMovieReleaseDate(), favs.get(i).getMovieOriginalTitle(), favs.get(i).getMovieID());
-                favMovies.add(newMovie);
-            }
-
-            myGridView.setAdapter(favAdapter);
-
-        }
 
 
     }

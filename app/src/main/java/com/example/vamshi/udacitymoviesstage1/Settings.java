@@ -2,6 +2,7 @@ package com.example.vamshi.udacitymoviesstage1;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
@@ -57,9 +58,8 @@ public class Settings extends AppCompatActivity {
                                 break;
                             case 2:
                                 dialog.dismiss();
-                                MainActivity.SortBy = "FAVS";
-                                MainActivity.LoadUI(MainActivity.SortBy);
-                                Toast.makeText(Settings.this, "Sorted As Favorites", Toast.LENGTH_SHORT).show();
+                                Intent in = new Intent(Settings.this, FavDisplay.class);
+                                startActivity(in);
                                 break;
                         }
                     }

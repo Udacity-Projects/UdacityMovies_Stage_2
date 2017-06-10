@@ -1,17 +1,11 @@
 package com.example.vamshi.udacitymoviesstage1;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,22 +16,9 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmResults;
-
 public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
-    static String GOOGLE_DEVELOPER_KEY = "";
+    static String GOOGLE_DEVELOPER_KEY = "AIzaSyA4Hk9f40CdF69TemQGLlThxieLJbYE6bE";
     private ImageView movie_poster_smallN;
     private TextView movie_titleN;
     private TextView movie_ratingN;
@@ -49,7 +30,7 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
     static String TrailerCode="";
     static ProgressBar playerProgress;
     public Intent in;
-    Realm realm;
+    public DatabaseHelper db;
     public Boolean favedyea = false;
 
     @Override
@@ -58,8 +39,7 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
         setContentView(R.layout.activity_movie_details);
         in  = getIntent();
         ID = in.getStringExtra("ID");
-        Realm.init(this);
-        realm= Realm.getDefaultInstance();
+        db = new DatabaseHelper(this);
         Toast.makeText(this, ID, Toast.LENGTH_SHORT).show();
         myPlayer = (YouTubePlayerView) findViewById(R.id.youtube_player);
         movie_poster_smallN = (ImageView)findViewById(R.id.movie_poster_smallN);
@@ -82,29 +62,13 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
             @Override
             public void onClick(View view) {
                 if(favedyea == true){
-
-                    realm.executeTransaction(new Realm.Transaction() {
-                        @Override
-                        public void execute(Realm realm) {
-                            RealmResults<MovieObject> rows = realm.where(MovieObject.class).equalTo("movieID", in.getStringExtra("ID")).findAll();
-                            rows.deleteAllFromRealm();
-                            Toast.makeText(MovieDetails.this, "Deleted", Toast.LENGTH_SHORT).show();
-                            fab.setImageResource(R.drawable.fav_border);
-                        }
-                    });
+                    Toast.makeText(MovieDetails.this, "Deleted", Toast.LENGTH_SHORT).show();
+                    fab.setImageResource(R.drawable.fav_border);
 
                 }else{
                     fab.setImageResource(R.drawable.fav_selected);
-                    realm.beginTransaction();
-                    MovieObject faved = realm.createObject(MovieObject.class);
-                    faved.setMovieID(in.getStringExtra("ID"));
-                    faved.setMovieOriginalTitle(in.getStringExtra("ORIGINAL_TITLE"));
-                    faved.setMovieRating(in.getStringExtra("RATING"));
-                    faved.setMovieReleaseDate(in.getStringExtra("RELEASE_DATE"));
-                    faved.setMovieSynopsis(in.getStringExtra("SYNOPSIS"));
-                    faved.setMovieURL(in.getStringExtra("POSTER_URL"));
-                    MainActivity.favMovies.add(faved);
-                    realm.commitTransaction();
+                    db.addContact(new FavMovies(Integer.parseInt(in.getStringExtra("ID")), in.getStringExtra("ORIGINAL_TITLE")));
+
                     Snackbar.make(view, "Added to Favourites", Snackbar.LENGTH_LONG)
                             .setAction("Action", null).show();
                     favedyea =true;
