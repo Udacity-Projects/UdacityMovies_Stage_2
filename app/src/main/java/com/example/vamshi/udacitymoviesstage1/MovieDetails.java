@@ -18,7 +18,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 
 public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.OnInitializedListener {
 
-    static String GOOGLE_DEVELOPER_KEY = "AIzaSyA4Hk9f40CdF69TemQGLlThxieLJbYE6bE";
+    static String GOOGLE_DEVELOPER_KEY = "";
     private ImageView movie_poster_smallN;
     private TextView movie_titleN;
     private TextView movie_ratingN;
@@ -54,7 +54,7 @@ public class MovieDetails extends YouTubeBaseActivity implements YouTubePlayer.O
         playerProgress.setVisibility(View.VISIBLE);
 //        myPlayer.setVisibility(View.GONE);
         getTrailer newTrailer = new getTrailer();
-        newTrailer.execute("https://api.themoviedb.org/3/movie/"+ ID +"/videos?api_key=984eb4f6c311eabbe5fd13dc82c16ab7&language=en-US");
+        newTrailer.execute("https://api.themoviedb.org/3/movie/"+ ID +"/videos?api_key=<<INSERT API KEY>>&language=en-US");
 
 
         final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fav_button);

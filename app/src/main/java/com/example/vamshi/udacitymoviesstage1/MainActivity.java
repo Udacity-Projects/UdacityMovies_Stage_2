@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     static GridViewAdapter favAdapter;
     public static DatabaseHelper db;
     public static List<String> movieTiles;
-    public static String MOVIEDBKEY = "984eb4f6c311eabbe5fd13dc82c16ab7" ;
+    public static String MOVIEDBKEY = "" ;
 
 
     @Override
